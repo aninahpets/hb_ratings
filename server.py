@@ -49,7 +49,7 @@ def submit():
     email = request.form.get('email')
     password = request.form.get('password')
 
-    #get user object with the matching email from form
+    #get user list with the matching email from form
     user = User.query.filter_by(email=email).all()
 
     if user == []:
@@ -58,15 +58,18 @@ def submit():
         db.session.add(new_user)
         db.session.commit()
         flash('You have successfully created an account.')
-        #need to run a new query to get user_id to create session 
+        #need to run a new query to get user_id to create session
+        new_user_id = db.session.query(User.user_id).filter_by(email=email).one()
+        session['user_id'] = new_user_id #add user id to session
     else:
         #if statement to validate password
-        if user.password == password:
+        if user[0].password == password:
             flash('You have successfully logged in.')
-            user.user_id = session[user_id]
+            session['user_id'] = user[0].user_id #add user id to session
         else:
             flash('You have NOT successfully logged in.')
 
+    print session
     return redirect('/') 
 
 
