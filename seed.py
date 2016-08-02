@@ -4,7 +4,7 @@ from sqlalchemy import func
 from model import User
 from model import Rating
 from model import Movie
-import datetime
+from datetime import datetime
 
 from model import connect_to_db, db
 from server import app
@@ -51,7 +51,7 @@ def load_movies():
             title = title[:-7]
 
         if released_at:
-            released_at = datetime.datetime.strptime(released_at,
+            released_at = datetime.strptime(released_at,
                 "%d-%b-%Y")
         else:
             released_at = None
