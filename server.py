@@ -54,8 +54,11 @@ def submit():
 
     if user == []:
         #add to db
-        users.insert().
-
+        new_user = User(email=email, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('You have successfully created an account.')
+        #need to run a new query to get user_id to create session 
     else:
         #if statement to validate password
         if user.password == password:
