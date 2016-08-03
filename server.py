@@ -38,7 +38,19 @@ def user_list():
 def login():
     """Login Page"""
 
-    return render_template("login.html")    
+    return render_template("login.html") 
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    """Logs User Out"""
+
+    # checks for and deletes user_id from session; returns message to homepage
+    if 'user_id' not in session:
+        return 'not_logged_out'
+    else:
+        del session['user_id']
+        print 'removed session'
+        return 'logged_out'
 
 
 @app.route('/submit', methods=['POST']) 
@@ -59,7 +71,7 @@ def submit():
         db.session.commit()
         flash('You have successfully created an account.')
         #need to run a new query to get user_id to create session
-        new_user_id = db.session.query(User.user_id).filter_by(email=email).one()
+        new_user_id = db.session.query(User.user_id).filter_by(email=email).one()[0]
         session['user_id'] = new_user_id #add user id to session
     else:
         #if statement to validate password
@@ -67,7 +79,7 @@ def submit():
             flash('You have successfully logged in.')
             session['user_id'] = user[0].user_id #add user id to session
         else:
-            flash('You have NOT successfully logged in.')
+            flash('Your password was incorrect and you were not logged in.')
 
     print session
     return redirect('/') 
