@@ -60,29 +60,44 @@ def submit():
     email = request.form.get('email')
     password = request.form.get('password')
 
-    #get user list with the matching email from form
-    user = User.query.filter_by(email=email).all()
+    #try statement to see if user exists in database, limiting results to one
+    try:
+        user = User.query.filter_by(email=email).one()
+        #delete session user_id if other user logged in
+        if 'user_id' in session:
+            del session['user_id']
+        # if statement to validate password
+        if user.password == password:
+            flash('You have successfully logged in.')
+            session['user_id'] = user.user_id #add user id to session
+        else:
+            flash('Your password was incorrect and you were not logged in.')
 
-    if user == []:
-        #add to db
+    #except statement to run if query returns error and user does not exist
+    except:
+        #delete session user_id if other user logged in
+        if 'user_id' in session:
+            del session['user_id']
         new_user = User(email=email, password=password)
-        db.session.add(new_user)
+        db.session.add(new_user) #add user to db
         db.session.commit()
         flash('You have successfully created an account.')
         #need to run a new query to get user_id to create session
         new_user_id = db.session.query(User.user_id).filter_by(email=email).one()[0]
         session['user_id'] = new_user_id #add user id to session
-    else:
-        #if statement to validate password
-        if user[0].password == password:
-            flash('You have successfully logged in.')
-            session['user_id'] = user[0].user_id #add user id to session
-        else:
-            flash('Your password was incorrect and you were not logged in.')
 
     print session
     return redirect('/') 
  
+
+@app.route('/user-details/<int:user_id>')
+def user_details(user_id):
+    """Generates user details"""
+    # movielist.
+
+    return render_template("user_details.html", movielist=movielist)
+
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
