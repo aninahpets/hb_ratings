@@ -45,13 +45,12 @@ def logout():
     """Logs User Out"""
 
     # checks for and deletes user_id from session; returns message to homepage
-    if 'user_id' not in session:
-        return 'not_logged_out'
-    else:
+    if 'user_id' in session:
         del session['user_id']
         print 'removed session'
         return 'logged_out'
-
+    else:
+        return 'not_logged_out'
 
 @app.route('/submit', methods=['POST']) 
 def submit():
