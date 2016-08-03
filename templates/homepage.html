@@ -10,7 +10,10 @@
 <p><a href="/users">View all users</a></p>
 
 <button id="logout">Log Out</button>
+
 <script>
+
+// Function to pop-up alert to confirm user logout based on message from flask route logout
 function logoutAlert(data) {
     if (data == 'logged_out') {
         alert('You are now logged out.');     
@@ -21,10 +24,12 @@ function logoutAlert(data) {
         }
     }
 
+// Function that calls flask route logout to delete user_id from session
 function logUserOut(evt) {
     $.post('/logout', {}, logoutAlert);
 }
 
+// Event listener to call function logUserOut when button is clicked
 $('#logout').on('click', logUserOut)
 </script>
 
