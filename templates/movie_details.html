@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- pass user object to this page, and use user object to look up user details and details on movies rated -->
+<h3>Movie Title: {{ movie.title }}</h3>
+
+<h3>Ratings Received</h3>
+
+<table>
+    <tr><th>User ID</th>
+    <th>Rating</th></tr>
+    {% for rating in movie.ratings %}
+    <tr><td>{{ rating.user_id }}</td>
+        <td>{{ rating.score }}</td></tr>
+    {% endfor %}
+</table>
+
+
+{% endblock %}
