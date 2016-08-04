@@ -121,6 +121,10 @@ def movie_details(movie_id):
 
     return render_template("movie_details.html", movie=movie)
 
+# @app.route('/submit_movie', methods=['POST'])
+# def submit_movie():
+    
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the

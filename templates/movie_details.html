@@ -6,6 +6,14 @@
 
 <h3>Ratings Received</h3>
 
+<!-- Need to add form validation to ensure user is logged in and input val is single int -->
+<form action='/submit_rating' method="POST" id='update_form'>
+<label id='user_rating'>Enter your rating for this movie here: <input type='number' name='movie_rating'></label>
+<input type='submit'>
+</form>
+
+<br>
+
 <table>
     <tr><th>User ID</th>
     <th>Rating</th></tr>
@@ -15,5 +23,19 @@
     {% endfor %}
 </table>
 
+<script type="text/javascript">
+
+function submitAlert()
+
+function submitRating(evt) {
+    var user_rating = {
+        'user_rating': 
+    }
+    $.post('/submit_rating', {}, submitAlert);
+}
+
+$('#update_form').on('click',submitRating)
+
+</script>
 
 {% endblock %}
