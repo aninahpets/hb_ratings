@@ -60,18 +60,24 @@ def submit():
     email = request.form.get('email')
     password = request.form.get('password')
 
-    #try statement to see if user exists in database, limiting results to one
+    
     try:
+        #try statement to see if user exists in database, limiting results to one
         user = User.query.filter_by(email=email).one()
+        user_id = user.user_id
         #delete session user_id if other user logged in
         if 'user_id' in session:
             del session['user_id']
+        #creates URL for user_details based on user_id
+        url = ('/user-details/%s' % str(user_id))
         # if statement to validate password
         if user.password == password:
             flash('You have successfully logged in.')
             session['user_id'] = user.user_id #add user id to session
+            return redirect(url)
         else:
             flash('Your password was incorrect and you were not logged in.')
+            return redirect('/') #for incorrect login, send user to homepage
 
     #except statement to run if query returns error and user does not exist
     except:
@@ -85,9 +91,9 @@ def submit():
         #need to run a new query to get user_id to create session
         new_user_id = db.session.query(User.user_id).filter_by(email=email).one()[0]
         session['user_id'] = new_user_id #add user id to session
-
-    print session
-    return redirect('/') 
+        #creates URL for user_details based on user_id
+        url = ('/user-details/%s' % str(new_user_id))
+        return redirect(url)
  
 
 @app.route('/user-details/<int:user_id>')
@@ -95,8 +101,17 @@ def user_details(user_id):
     """Generates user details"""
     # movielist.
 
-    return render_template("user_details.html", movielist=movielist)
+    user = db.session.query(User).filter_by(user_id=user_id).one()
 
+    return render_template("user_details.html", user=user)
+
+
+@app.route('/movies')
+def movie_list():
+    """List of movies."""
+    movies = Movie.query.order_by(Movie.title).all()
+
+    return render_template("movie_list.html", movies=movies)
 
 
 if __name__ == "__main__":
