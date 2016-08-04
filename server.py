@@ -113,6 +113,14 @@ def movie_list():
 
     return render_template("movie_list.html", movies=movies)
 
+@app.route('/movie-details/<int:movie_id>')
+def movie_details(movie_id):
+    """Generates movie details including all ratings"""
+
+    movie = db.session.query(Movie).filter_by(movie_id=movie_id).one()
+
+    return render_template("movie_details.html", movie=movie)
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
