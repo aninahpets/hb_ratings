@@ -52,6 +52,40 @@ def logout():
     else:
         return 'not_logged_out'
 
+@app.route('/submit_rating', methods=['POST'])
+def submit_rating():
+    """Updates user rating in database"""
+
+    user_rating = request.form.get('user_rating')
+    user_rating = int(user_rating)
+
+    movie_id = request.form.get('movie_id')
+    movie_id = int(movie_id)
+
+    print user_rating 
+    print movie_id
+
+    #check if user_id in session
+    if 'user_id' in session:
+        print 'inside the if statement'
+        user_id = session['user_id']
+        try:
+            print 'inside the try'
+            movie_rating = Rating.query.filter_by(movie_id = movie_id, user_id = user_id).one()
+            movie_rating.score = user_rating
+            db.session.commit()
+            #update existing rating in db
+            return "You have updated your rating for this movie."
+        except:
+            print 'inside the except'
+            new_rating = Rating(movie_id=movie_id, user_id=user_id, score=user_rating)
+            db.session.add(new_rating)
+            db.session.commit()
+            return "You have added a new rating for this movie."
+    else:
+        print 'inside the else'
+        return 'You are not logged in.'
+
 @app.route('/submit', methods=['POST']) 
 def submit():
     """Page after login submission"""

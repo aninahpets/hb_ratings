@@ -8,7 +8,7 @@
 
 <!-- Need to add form validation to ensure user is logged in and input val is single int -->
 <form action='/submit_rating' method="POST" id='update_form'>
-<label id='user_rating'>Enter your rating for this movie here: <input type='number' name='movie_rating'></label>
+<label>Enter your rating for this movie here: <input type='number' name='movie_rating' id='user_rating'></label>
 <input type='submit'>
 </form>
 
@@ -25,16 +25,22 @@
 
 <script type="text/javascript">
 
-function submitAlert()
-
-function submitRating(evt) {
-    var user_rating = {
-        'user_rating': 
-    }
-    $.post('/submit_rating', {}, submitAlert);
+function submitAlert(result){
+    alert(result);
 }
 
-$('#update_form').on('click',submitRating)
+function submitRating(evt) {
+    evt.preventDefault();
+
+    var formInputs = {
+        'user_rating': $('#user_rating').val(),
+        'movie_id': {{ movie.movie_id }}
+    };
+
+    $.post('/submit_rating', formInputs, submitAlert);
+}
+
+$('#update_form').on('submit',submitRating);
 
 </script>
 
