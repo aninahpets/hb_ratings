@@ -75,16 +75,20 @@ def submit_rating():
             movie_rating.score = user_rating
             db.session.commit()
             #update existing rating in db
-            return "You have updated your rating for this movie."
+            flash("You have updated your rating for this movie.")
         except:
             print 'inside the except'
             new_rating = Rating(movie_id=movie_id, user_id=user_id, score=user_rating)
             db.session.add(new_rating)
             db.session.commit()
-            return "You have added a new rating for this movie."
+            flash("You have added a new rating for this movie.")
     else:
         print 'inside the else'
-        return 'You are not logged in.'
+        flash('You are not logged in.')
+
+    url = ('/movie-details/%s' % str(movie_id))
+    return redirect(url)
+
 
 @app.route('/submit', methods=['POST']) 
 def submit():
