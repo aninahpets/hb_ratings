@@ -151,13 +151,20 @@ def movie_list():
 
     return render_template("movie_list.html", movies=movies)
 
+
 @app.route('/movie-details/<int:movie_id>')
 def movie_details(movie_id):
     """Generates movie details including all ratings"""
 
     movie = db.session.query(Movie).filter_by(movie_id=movie_id).one()
+    user_id = session.get('user_id')
 
-    return render_template("movie_details.html", movie=movie)
+    if user_id:
+        user = User.query.get(user_id)
+        prediction = user.predict_rating(movie)
+        prediction = round(prediction, 2)
+
+    return render_template("movie_details.html", movie=movie, prediction=prediction)
 
 # @app.route('/submit_movie', methods=['POST'])
 # def submit_movie():
