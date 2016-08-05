@@ -62,31 +62,23 @@ def submit_rating():
     movie_id = request.form.get('movie_id')
     movie_id = int(movie_id)
 
-    print user_rating 
-    print movie_id
-
     #check if user_id in session
     if 'user_id' in session:
-        print 'inside the if statement'
         user_id = session['user_id']
         try:
-            print 'inside the try'
             movie_rating = Rating.query.filter_by(movie_id = movie_id, user_id = user_id).one()
             movie_rating.score = user_rating
-            db.session.commit()
-            #update existing rating in db
+            db.session.commit() #update existing rating in db
             flash("You have updated your rating for this movie.")
         except:
-            print 'inside the except'
             new_rating = Rating(movie_id=movie_id, user_id=user_id, score=user_rating)
             db.session.add(new_rating)
-            db.session.commit()
+            db.session.commit() #add new rating to db
             flash("You have added a new rating for this movie.")
     else:
-        print 'inside the else'
         flash('You are not logged in.')
 
-    url = ('/movie-details/%s' % str(movie_id))
+    url = ('/movie-details/%s' % str(movie_id)) #send user to same page w/ flash message
     return redirect(url)
 
 
@@ -158,13 +150,16 @@ def movie_details(movie_id):
 
     movie = db.session.query(Movie).filter_by(movie_id=movie_id).one()
     user_id = session.get('user_id')
+    user_rating = db.session.query(Rating.score).filter_by(movie_id=movie_id, user_id=user_id).first()
+    if user_rating:
+        user_rating = user_rating[0]
 
     if user_id:
         user = User.query.get(user_id)
         prediction = user.predict_rating(movie)
         prediction = round(prediction, 2)
 
-    return render_template("movie_details.html", movie=movie, prediction=prediction)
+    return render_template("movie_details.html", movie=movie, prediction=prediction, user_rating=user_rating)
 
 # @app.route('/submit_movie', methods=['POST'])
 # def submit_movie():

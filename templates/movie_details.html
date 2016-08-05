@@ -13,7 +13,13 @@
 <input type='submit'>
 </form>
 
+{% if user_rating %}
+<h3>You rated this movie {{ user_rating }}</h3>
+{% endif %}
+
+{% if not user_rating %}
 <h3>We predict you will rate this movie: {{ prediction }} </h3>
+{% endif %}
 
 <br>
 
