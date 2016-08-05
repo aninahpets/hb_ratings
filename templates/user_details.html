@@ -15,7 +15,7 @@
     <tr><th>Title</th>
     <th>Rating</th></tr>
     {% for movie in user.ratings %}
-    <tr><td>{{ movie.movie.title }}</td>
+    <tr><td><a href='/movie-details/{{ movie.movie_id }}'>{{ movie.movie.title }}</a></td>
         <td>{{ movie.score }}</td></tr>
     {% endfor %}
 </table>
